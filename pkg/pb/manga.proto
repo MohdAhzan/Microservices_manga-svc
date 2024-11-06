@@ -4,6 +4,8 @@ package manga;
 
 option go_package = "./pkg/pb";
 
+import "google/protobuf/timestamp.proto";
+
 service MangaService {
   rpc CreateManga(CreateMangaRequest) returns (CreateMangaResponse);
   rpc GetManga(GetMangaRequest) returns (GetMangaResponse);
@@ -13,65 +15,76 @@ service MangaService {
 }
 
 message Manga {
-    int64 id = 1;             
-    string name = 2;          
-    string author = 3;       
-    string published_date = 4; 
-    string genre = 5;         
-    double price = 6;        
-    int64 stock = 7;         
-    string description = 8; 
-    double rating = 9;     
+  int64 id = 1;             
+  string name = 2;          
+  string author = 3;       
+  google.protobuf.Timestamp published_date = 4; 
+  string genre = 5;         
+  double price = 6;        
+  int64 stock = 7;         
+  string description = 8; 
+  double rating = 9;     
+}
+
+message UpdateMangaModel{
+
+  int64 id = 1;
+  string name = 2;
+  string author = 3;
+  google.protobuf.Timestamp published_date = 4; 
+  string genre =5;
+  double price= 6;
+  int64 stock =7;
+  string description = 8;
 }
 
 message GetMangaRequest {
-    int64 id = 1;
+  int64 id = 1;
 }
 
 message GetMangaResponse {
-    int64 status = 1;
-    Manga manga = 2;
-    string error = 3;
+  int64 status = 1;
+  Manga manga = 2;
+  string error = 3;
 } 
 
 message ListMangaRequest {
-    string genre = 1;       
-    string author = 2;     
+  string genre = 1;       
+  string author = 2;     
 }
 
 message ListMangaResponse {
-    int64 status = 1;
-    repeated Manga manga = 2;
-    string error = 3;
+  int64 status = 1;
+  repeated Manga manga = 2;
+  string error = 3;
 }
 
 message CreateMangaRequest {
-    Manga manga = 1;
+  Manga manga = 1;
 }
 
 message CreateMangaResponse {
-    int64 status = 1;
-    Manga manga = 2;
-    string error = 3;
+  int64 status = 1;
+  Manga manga = 2;
+  string error = 3;
 }
 
 message UpdateMangaRequest {
-    Manga manga = 1;
+  UpdateMangaModel updatemodel= 1;
 }
 
 message UpdateMangaResponse {
-    int64 status = 1;
-    Manga manga = 2;
-    string error = 3;
+  int64 status = 1;
+  string error = 2;
 }
 
 message DeleteMangaRequest {
-    int64 id = 1;
+  int64 id = 1;
 }
 
 message DeleteMangaResponse {
-    int64 status = 1;
-    bool success = 2;
-    string error = 3;
+  int64 status = 1;
+  bool success = 2;
+  string error = 3;
 }
 
