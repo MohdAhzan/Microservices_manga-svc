@@ -19,15 +19,24 @@ type MangaService struct{
 func (s *MangaService)CreateManga(ctx context.Context,req *pb.CreateMangaRequest)(*pb.CreateMangaResponse,error){
 
 
+  var count int64
+
+    if err := s.Repo.DB.Model(&models.Manga{}).Where("name = ?", req.Manga.Name).Count(&count).Error; err != nil {
+        return &pb.CreateMangaResponse{
+            Status: http.StatusInternalServerError,
+            Error:  "Database error: " + err.Error(),
+        }, nil
+    }
+
+    if count > 0 {
+        return &pb.CreateMangaResponse{
+            Status: http.StatusConflict,
+            Error:  req.Manga.Name + " Manga already exists",
+        }, nil
+    }
+
+
   var manga models.Manga
-
-
-  if err := s.Repo.DB.First(&manga, req.Manga.Id).Error; err == nil {
-    return &pb.CreateMangaResponse{
-      Status: http.StatusConflict,
-      Error:  "Manga with this ID already exists",
-    }, nil
-  }
 
   manga.Name = req.Manga.Name
   manga.Author=req.Manga.Author
@@ -58,7 +67,6 @@ func (s *MangaService)CreateManga(ctx context.Context,req *pb.CreateMangaRequest
 
 func (s *MangaService)GetManga(ctx context.Context, req *pb.GetMangaRequest)(*pb.GetMangaResponse,error){
 
-
   var responseData models.Manga
 
   if result := s.Repo.DB.Find(&responseData, req.Id); result.Error != nil {
@@ -69,6 +77,7 @@ func (s *MangaService)GetManga(ctx context.Context, req *pb.GetMangaRequest)(*pb
   }
 
   pbResponseData:=helper.ConvertToPbManga(responseData)
+
 
   return &pb.GetMangaResponse{
     Status: http.StatusOK,

@@ -9,7 +9,9 @@ import (
 )
 
 func ConvertToPbManga(manga models.Manga) *pb.Manga {
-	return &pb.Manga{
+
+
+  return &pb.Manga{
 		Id:            int64(manga.ID),
 		Name:          manga.Name,
 		Author:        manga.Author,
